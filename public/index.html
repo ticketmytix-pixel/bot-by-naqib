@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bot by Naqib — Sound Sticker WhatsApp</title>
+  <meta name="description" content="Hubungkan Bot by Naqib (WhatsApp Sound Sticker) langsung dari HP cukup dengan kode pairing 8 digit." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main class="shell">
+    <header class="top">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18V5l12-2v13"/>
+            <circle cx="6" cy="18" r="3"/>
+            <circle cx="18" cy="16" r="3"/>
+          </svg>
+        </div>
+        <div>
+          <h1>Bot by Naqib</h1>
+          <p class="subtitle">Bot WhatsApp stiker bersuara — tinggal pairing</p>
+        </div>
+      </div>
+
+      <div id="status-badge" class="status-badge" data-state="idle">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span id="status-text">Belum terhubung</span>
+      </div>
+    </header>
+
+    <!-- Panel 1: Form Pairing -->
+    <section id="panel-pair" class="card">
+      <h2>Hubungkan Nomor WhatsApp</h2>
+      <p class="lead">Masukkan nomor HP yang ingin dijadikan bot, lalu masukkan kode pairing di aplikasi WhatsApp.</p>
+
+      <form id="pair-form" class="pair-form" novalidate>
+        <label for="phone-input">Nomor WhatsApp</label>
+        <div class="input-row">
+          <input
+            id="phone-input"
+            name="phone"
+            type="tel"
+            inputmode="numeric"
+            autocomplete="tel"
+            placeholder="081234567890"
+            required
+          />
+        </div>
+        <p class="hint">Boleh pakai format <code>08...</code> atau <code>628...</code> — otomatis dirapikan.</p>
+
+        <button id="pair-btn" type="submit" class="btn-primary">
+          <span class="btn-label">Dapatkan Kode Pairing</span>
+        </button>
+      </form>
+
+      <p id="error-box" class="error-box" role="alert" hidden></p>
+
+      <!-- Kotak Kode Pairing -->
+      <div id="code-section" class="code-section" hidden>
+        <p class="code-caption">Masukkan kode ini di WhatsApp HP Anda:</p>
+        <div class="code-box">
+          <span id="pairing-code" class="pairing-code">---- ----</span>
+          <button id="copy-btn" type="button" class="btn-copy">Salin</button>
+        </div>
+
+        <ol class="steps">
+          <li>Buka <strong>WhatsApp</strong> di HP Anda</li>
+          <li>Ketuk <strong>⋮ → Perangkat Tertaut → Tautkan Perangkat</strong></li>
+          <li>Pilih <strong>Tautkan dengan nomor telepon saja</strong>, lalu tempel kode di atas</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Panel 2: Sudah Terhubung -->
+    <section id="panel-connected" class="card" hidden>
+      <div class="connected-head">
+        <div>
+          <h2>Bot Aktif &amp; Siap Dipakai</h2>
+          <p class="connected-phone">Terhubung ke <strong id="connected-number">-</strong></p>
+        </div>
+        <button id="logout-btn" type="button" class="btn-ghost">Ganti Nomor</button>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat">
+          <span class="stat-value" id="stat-audio">0</span>
+          <span class="stat-label">Sticker Audio</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value" id="stat-normal">0</span>
+          <span class="stat-label">Sticker Biasa</span>
+        </div>
+      </div>
+
+      <div class="commands">
+        <h3>Cara Pakai di Chat WhatsApp</h3>
+        <div class="cmd-item">
+          <code>.s --audio</code>
+          <span>Kirim atau reply video (maks 5 detik) untuk membuat stiker bersuara</span>
+        </div>
+        <div class="cmd-item">
+          <code>.s --audio</code>
+          <span>Reply audio/VN lalu kirim gambar (maks 10 detik)</span>
+        </div>
+        <div class="cmd-item">
+          <code>.s</code>
+          <span>Buat stiker biasa dari gambar atau video</span>
+        </div>
+        <div class="cmd-item">
+          <code>.menu</code>
+          <span>Lihat daftar perintah lengkap di WhatsApp</span>
+        </div>
+      </div>
+    </section>
+
+    <footer class="foot">
+      Fitur suara pada Sound Sticker tampil di WhatsApp versi terbaru / Beta.
+    </footer>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
