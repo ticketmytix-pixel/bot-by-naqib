@@ -3,125 +3,247 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bot by Naqib — Sound Sticker WhatsApp</title>
-  <meta name="description" content="Hubungkan Bot by Naqib (WhatsApp Sound Sticker) langsung dari HP cukup dengan kode pairing 8 digit." />
+  <title>Bot by Naqib — Multi-Bot WhatsApp Platform</title>
+  <meta name="description" content="Login dengan Google dan verifikasi OTP WhatsApp untuk mengakses platform Multi-Bot WhatsApp Bot by Naqib." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
-  <main class="shell">
-    <header class="top">
+  <div class="ambient" aria-hidden="true"></div>
+
+  <div class="app">
+    <!-- Top Header -->
+    <header class="topbar">
       <div class="brand">
-        <div class="brand-mark" aria-hidden="true">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9 18V5l12-2v13"/>
-            <circle cx="6" cy="18" r="3"/>
-            <circle cx="18" cy="16" r="3"/>
+        <div class="brand-logo" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
           </svg>
         </div>
         <div>
-          <h1>Bot by Naqib</h1>
-          <p class="subtitle">Bot WhatsApp stiker bersuara — tinggal pairing</p>
+          <span class="brand-title">BOT BY NAQIB</span>
+          <span class="brand-sub">Multi-Session WA Engine</span>
         </div>
       </div>
 
-      <div id="status-badge" class="status-badge" data-state="idle">
-        <span class="status-dot" aria-hidden="true"></span>
-        <span id="status-text">Belum terhubung</span>
+      <div id="user-bar" class="user-bar" hidden>
+        <div class="user-meta">
+          <span id="user-name" class="user-name">-</span>
+          <div class="badges-row">
+            <span id="user-role-badge" class="role-badge">USER</span>
+            <span id="user-verified-badge" class="verify-badge" hidden>✓ TERVERIFIKASI</span>
+          </div>
+        </div>
+        <button id="btn-logout-account" class="btn-outline-sm" type="button">Keluar</button>
       </div>
     </header>
 
-    <!-- Panel 1: Form Pairing -->
-    <section id="panel-pair" class="card">
-      <h2>Hubungkan Nomor WhatsApp</h2>
-      <p class="lead">Masukkan nomor HP yang ingin dijadikan bot, lalu masukkan kode pairing di aplikasi WhatsApp.</p>
+    <!-- VIEW 1: HALAMAN LOGIN RESMI GOOGLE (MUNCUL PERTAMA) -->
+    <main id="view-login" class="login-wrap">
+      <section class="glass-card hero-card">
+        <div class="login-step-tag">AUTHENTICATION REQUIRED</div>
+        <h1>Masuk ke Platform<br />Bot by Naqib</h1>
+        <p class="hero-desc">
+          Login menggunakan akun Google resmi Anda untuk melanjutkan ke dashboard, verifikasi OTP WhatsApp, dan kelola bot Multi-Session 24/7.
+        </p>
 
-      <form id="pair-form" class="pair-form" novalidate>
-        <label for="phone-input">Nomor WhatsApp</label>
-        <div class="input-row">
-          <input
-            id="phone-input"
-            name="phone"
-            type="tel"
-            inputmode="numeric"
-            autocomplete="tel"
-            placeholder="081234567890"
-            required
-          />
-        </div>
-        <p class="hint">Boleh pakai format <code>08...</code> atau <code>628...</code> — otomatis dirapikan.</p>
-
-        <button id="pair-btn" type="submit" class="btn-primary">
-          <span class="btn-label">Dapatkan Kode Pairing</span>
-        </button>
-      </form>
-
-      <p id="error-box" class="error-box" role="alert" hidden></p>
-
-      <!-- Kotak Kode Pairing -->
-      <div id="code-section" class="code-section" hidden>
-        <p class="code-caption">Masukkan kode ini di WhatsApp HP Anda:</p>
-        <div class="code-box">
-          <span id="pairing-code" class="pairing-code">---- ----</span>
-          <button id="copy-btn" type="button" class="btn-copy">Salin</button>
+        <div class="feature-tags">
+          <span>Sound Sticker</span>
+          <span>Anti-Delete</span>
+          <span>Anti-Edit</span>
+          <span>Anti-Kudeta</span>
+          <span>Minigame XOX</span>
+          <span>Spotify Music</span>
+          <span>No-WM Downloader</span>
+          <span>Ekstrak Audio</span>
+          <span>Remove BG</span>
         </div>
 
-        <ol class="steps">
-          <li>Buka <strong>WhatsApp</strong> di HP Anda</li>
-          <li>Ketuk <strong>⋮ → Perangkat Tertaut → Tautkan Perangkat</strong></li>
-          <li>Pilih <strong>Tautkan dengan nomor telepon saja</strong>, lalu tempel kode di atas</li>
-        </ol>
-      </div>
-    </section>
+        <a id="btn-google-oauth" href="/auth/google" class="btn-google">
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.7-2.4 3.6v3h3.8c2.3-2.1 3.6-5.2 3.6-8.8z"/>
+            <path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-3l-3.8-3c-1.1.7-2.5 1.2-4.2 1.2-3.2 0-5.9-2.2-6.9-5.1H1.2v3.1C3.2 21.2 7.3 24 12 24z"/>
+            <path fill="#FBBC05" d="M5.1 14.1c-.2-.7-.4-1.4-.4-2.1s.1-1.4.4-2.1V6.8H1.2C.4 8.4 0 10.1 0 12s.4 3.6 1.2 5.2l3.9-3.1z"/>
+            <path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4C18 1.2 15.2 0 12 0 7.3 0 3.2 2.8 1.2 6.8l3.9 3.1c1-2.9 3.7-5.1 6.9-5.1z"/>
+          </svg>
+          <span>Lanjutkan dengan Google</span>
+        </a>
 
-    <!-- Panel 2: Sudah Terhubung -->
-    <section id="panel-connected" class="card" hidden>
-      <div class="connected-head">
-        <div>
-          <h2>Bot Aktif &amp; Siap Dipakai</h2>
-          <p class="connected-phone">Terhubung ke <strong id="connected-number">-</strong></p>
-        </div>
-        <button id="logout-btn" type="button" class="btn-ghost">Ganti Nomor</button>
-      </div>
+        <p id="oauth-config-hint" class="tos-warning" style="margin-top:14px;margin-bottom:0;" hidden>
+          <strong>Info Deploy:</strong> Isi <code>GOOGLE_CLIENT_ID</code>, <code>GOOGLE_CLIENT_SECRET</code>, dan <code>PUBLIC_URL</code> di Environment Variable hosting (Railway / Koyeb / VPS) agar tombol Google OAuth langsung aktif.
+        </p>
 
-      <div class="stats-row">
-        <div class="stat">
-          <span class="stat-value" id="stat-audio">0</span>
-          <span class="stat-label">Sticker Audio</span>
-        </div>
-        <div class="stat">
-          <span class="stat-value" id="stat-normal">0</span>
-          <span class="stat-label">Sticker Biasa</span>
-        </div>
-      </div>
+        <p id="login-error" class="alert-error" hidden></p>
+      </section>
+    </main>
 
-      <div class="commands">
-        <h3>Cara Pakai di Chat WhatsApp</h3>
-        <div class="cmd-item">
-          <code>.s --audio</code>
-          <span>Kirim atau reply video (maks 5 detik) untuk membuat stiker bersuara</span>
+    <!-- VIEW 2: DASHBOARD UTAMA (SETELAH LOGIN GOOGLE) -->
+    <main id="view-dashboard" class="dashboard" hidden>
+      <!-- Statistik Global -->
+      <section class="stats-strip">
+        <div class="stat-tile">
+          <span class="stat-label">Bot Online</span>
+          <strong id="stat-active-bots" class="stat-num">0</strong>
         </div>
-        <div class="cmd-item">
-          <code>.s --audio</code>
-          <span>Reply audio/VN lalu kirim gambar (maks 10 detik)</span>
+        <div class="stat-tile">
+          <span class="stat-label">Total Stiker</span>
+          <strong id="stat-total-stickers" class="stat-num">0</strong>
         </div>
-        <div class="cmd-item">
-          <code>.s</code>
-          <span>Buat stiker biasa dari gambar atau video</span>
+        <div class="stat-tile">
+          <span class="stat-label">Download &amp; Tools</span>
+          <strong id="stat-total-downloads" class="stat-num">0</strong>
         </div>
-        <div class="cmd-item">
-          <code>.menu</code>
-          <span>Lihat daftar perintah lengkap di WhatsApp</span>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <footer class="foot">
-      Fitur suara pada Sound Sticker tampil di WhatsApp versi terbaru / Beta.
+      <!-- STEP WAJIB: VERIFIKASI OTP WHATSAPP -->
+      <section id="panel-otp" class="glass-card otp-card" hidden>
+        <div class="vip-tag">VERIFIKASI AKUN — OTP WHATSAPP</div>
+        <h2>Verifikasi Nomor WhatsApp Anda</h2>
+        <p class="muted">
+          Setiap akun wajib memverifikasi nomor WhatsApp menggunakan kode <strong>OTP 6 digit</strong> yang dikirim langsung ke WhatsApp Anda sebelum mengakses fitur penuh.
+        </p>
+
+        <form id="otp-send-form" class="pair-form">
+          <div class="field">
+            <label for="otp-phone">Nomor WhatsApp Aktif</label>
+            <input id="otp-phone" type="tel" inputmode="numeric" placeholder="081234567890" required />
+          </div>
+          <button id="btn-send-otp" type="submit" class="btn-primary">
+            Kirim Kode OTP ke WhatsApp
+          </button>
+        </form>
+
+        <form id="otp-verify-form" class="pair-form" style="margin-top:16px;" hidden>
+          <div class="field">
+            <label for="otp-code">Masukkan Kode OTP (6 Digit)</label>
+            <input id="otp-code" type="text" inputmode="numeric" maxlength="6" placeholder="123456" class="otp-input" required />
+          </div>
+          <button id="btn-verify-otp" type="submit" class="btn-primary">
+            Konfirmasi &amp; Verifikasi Nomor
+          </button>
+        </form>
+
+        <p id="otp-success" class="alert-success" hidden></p>
+        <p id="otp-error" class="alert-error" hidden></p>
+      </section>
+
+      <!-- PANEL VIP UPGRADE / PERPANJANGAN (Role USER atau BUYER EXPIRED setelah OTP terverifikasi) -->
+      <section id="panel-vip-gate" class="glass-card vip-card" hidden>
+        <div id="vip-gate-tag" class="vip-tag">AKSES TERBATAS — KHUSUS VIP</div>
+        <h2 id="vip-gate-title">Upgrade ke Role Buyer (VIP) untuk Jadi Bot</h2>
+        <p id="vip-gate-desc" class="muted">
+          Nomor WhatsApp Anda sudah <strong>Terverifikasi ✓</strong>. Untuk menjadikan nomor WhatsApp Anda sebagai <strong>Bot by Naqib</strong>, silakan beli akses VIP dengan menghubungi Owner via WhatsApp di bawah ini:
+        </p>
+
+        <div class="vip-benefits">
+          <div>• Pasang nomor WA sendiri jadi bot 24/7 secara paralel</div>
+          <div>• Akses penuh Sound Sticker, Downloader No-WM, Spotify, Remove BG</div>
+          <div>• Fitur Proteksi Grup (Anti-Delete, Anti-Edit, Anti-Kudeta) &amp; XOX</div>
+        </div>
+
+        <div class="vip-actions">
+          <a id="vip-wa-link" href="https://wa.me/6285185779714" target="_blank" rel="noopener noreferrer" class="btn-primary">
+            💎 Beli Bot VIP (WA 085185779714)
+          </a>
+          <a id="trial-bot-link" href="https://wa.me/628972004910?text=.menu" target="_blank" rel="noopener noreferrer" class="btn-secondary">
+            🤖 Uji Coba Gratis 10 Chat (Bot 08972004910)
+          </a>
+        </div>
+        <p class="tiny-note">Nomor Anda sudah terverifikasi — Anda otomatis mendapat <strong>10x uji coba gratis</strong> di Bot Owner (08972004910). Untuk pasang bot di nomor WA sendiri (tanpa limit), klik <strong>Beli Bot VIP</strong>.</p>
+      </section>
+
+      <!-- PANEL PAIRING MULTI-BOT (Khusus OWNER & BUYER terverifikasi) -->
+      <section id="panel-pairing" class="glass-card" hidden>
+        <div class="section-head">
+          <div>
+            <h2>Hubungkan Nomor WhatsApp Baru</h2>
+            <p class="muted">Jalankan beberapa nomor WhatsApp menjadi bot secara bersamaan.</p>
+          </div>
+        </div>
+
+        <div class="tos-warning" role="region" aria-label="Peringatan Aturan WhatsApp">
+          <div class="tos-title">⚠️ Peringatan Penting — Aturan Penggunaan WhatsApp</div>
+          <ul>
+            <li>Menghubungkan nomor WhatsApp ke bot pihak ketiga memiliki risiko <strong>pembatasan atau pemblokiran (banned)</strong> oleh WhatsApp jika digunakan untuk spam, broadcast massal, atau melanggar Ketentuan Layanan WhatsApp.</li>
+            <li>Sangat disarankan menggunakan <strong>nomor WhatsApp khusus / cadangan</strong>, bukan nomor utama pribadi atau bisnis penting Anda.</li>
+            <li>Pengguna bertanggung jawab penuh atas penggunaan bot di grup maupun chat pribadi.</li>
+          </ul>
+          <label class="tos-check">
+            <input id="tos-checkbox" type="checkbox" />
+            <span>Saya memahami risiko dan setuju menggunakan bot sesuai aturan WhatsApp.</span>
+          </label>
+        </div>
+
+        <form id="pair-form" class="pair-form">
+          <div class="form-grid">
+            <div class="field">
+              <label for="bot-phone">Nomor WhatsApp</label>
+              <input id="bot-phone" type="tel" inputmode="numeric" placeholder="081234567890" required />
+            </div>
+            <div class="field">
+              <label for="bot-pack">Nama Bot / Pack Stiker</label>
+              <input id="bot-pack" type="text" value="Bot by Naqib" placeholder="Bot by Naqib" />
+            </div>
+          </div>
+
+          <button id="btn-pair" type="submit" class="btn-primary" disabled>
+            Generate Kode Pairing 8 Digit
+          </button>
+        </form>
+
+        <p id="pair-error" class="alert-error" hidden></p>
+      </section>
+
+      <!-- DAFTAR BOT AKTIF (MULTI-SESSION) -->
+      <section id="panel-bots-list" class="glass-card" hidden>
+        <div class="section-head">
+          <div>
+            <h2>Daftar Bot Aktif (Multi-Session)</h2>
+            <p class="muted">Setiap nomor berjalan di sesi terisolasi secara paralel.</p>
+          </div>
+        </div>
+        <div id="bots-container" class="bots-grid">
+          <p class="empty-state">Belum ada nomor WhatsApp yang ditautkan.</p>
+        </div>
+      </section>
+
+      <!-- OWNER CONSOLE: MANAJEMEN ROLE USER -->
+      <section id="panel-owner" class="glass-card owner-card" hidden>
+        <div class="section-head">
+          <div>
+            <h2>Owner Console — Manajemen Role User</h2>
+            <p class="muted">Pantau status verifikasi OTP setiap akun dan tetapkan role <strong>BUYER (VIP)</strong> dengan 1 klik.</p>
+          </div>
+        </div>
+        <div id="users-container" class="users-list">
+          <p class="empty-state">Memuat daftar akun...</p>
+        </div>
+      </section>
+
+      <!-- PANDUAN PERINTAH & DOWNLOAD -->
+      <section class="glass-card">
+        <h2>Daftar Fitur &amp; Perintah Bot</h2>
+        <div class="cmd-grid">
+          <div class="cmd-box"><code>.s --audio</code><span>Sound Sticker (video maks 5d / gambar+VN maks 10d)</span></div>
+          <div class="cmd-box"><code>.s</code><span>Sticker biasa gambar/video (tambah <code>--crop</code>)</span></div>
+          <div class="cmd-box"><code>.dl &lt;link&gt;</code><span>Download TikTok/IG/YT/FB tanpa watermark</span></div>
+          <div class="cmd-box"><code>.spotify &lt;lagu&gt;</code><span>Putar &amp; unduh musik Spotify ke chat WA</span></div>
+          <div class="cmd-box"><code>.toaudio</code><span>Ekstrak audio MP3 dari video</span></div>
+          <div class="cmd-box"><code>.removebg</code><span>Hapus background foto jadi PNG transparan</span></div>
+          <div class="cmd-box"><code>.antidelete on</code><span>Deteksi &amp; kirim ulang pesan grup yang dihapus</span></div>
+          <div class="cmd-box"><code>.antiedit on</code><span>Deteksi teks asli sebelum diedit di grup</span></div>
+          <div class="cmd-box"><code>.antikudeta on</code><span>Cegah admin nakal mencopot admin lain</span></div>
+          <div class="cmd-box"><code>.xox</code><span>Minigame Tic-Tac-Toe (XOX) di grup</span></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      Bot by Naqib • Multi-Session WhatsApp Engine • VIP Support: 085185779714
     </footer>
-  </main>
+  </div>
 
   <script src="/app.js"></script>
 </body>

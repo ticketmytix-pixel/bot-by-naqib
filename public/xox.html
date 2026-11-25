@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>XOX Live — Bot by Naqib</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Plus+Jakarta+Sans:wght@500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #070c10;
+      --card: #101820;
+      --cell: #16212c;
+      --border: rgba(255, 255, 255, 0.09);
+      --ink: #eef4f2;
+      --muted: #8ea39d;
+      --x: #10e8a6;
+      --o: #22d3ee;
+      --warn: #fbbf24;
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0; min-height: 100dvh; background: var(--bg); color: var(--ink);
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      display: grid; place-items: center; padding: 18px;
+    }
+    .panel {
+      width: 100%; max-width: 390px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 22px 18px;
+      display: flex; flex-direction: column; gap: 15px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+    }
+    .top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    h1 { margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; }
+    .mode-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem; font-weight: 700; padding: 4px 10px; border-radius: 999px;
+      background: rgba(16, 232, 166, 0.14); color: var(--x);
+    }
+    .status {
+      text-align: center; font-size: 0.9rem; font-weight: 700;
+      padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+    }
+    .status.warn { color: var(--warn); border-color: rgba(251, 191, 36, 0.3); }
+    .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .cell {
+      aspect-ratio: 1 / 1; border-radius: 14px;
+      background: var(--cell); border: 1.5px solid var(--border);
+      font-family: 'Space Grotesk', sans-serif; font-size: 2.6rem; font-weight: 700;
+      color: var(--ink); display: grid; place-items: center; cursor: pointer;
+      transition: transform 0.1s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+    .cell:active:not(:disabled) { transform: scale(0.95); }
+    .cell[data-v='X'] { color: var(--x); border-color: rgba(16, 232, 166, 0.4); }
+    .cell[data-v='O'] { color: var(--o); border-color: rgba(34, 211, 238, 0.4); }
+    .cell.win { background: rgba(16, 232, 166, 0.2); border-color: var(--x); }
+    .actions { display: flex; gap: 10px; }
+    .btn {
+      flex: 1; padding: 12px; border-radius: 12px; border: none;
+      font-family: inherit; font-size: 0.88rem; font-weight: 700; cursor: pointer;
+    }
+    .btn-primary { background: linear-gradient(135deg, var(--x), var(--o)); color: #04130f; }
+    .btn-ghost { background: rgba(255,255,255,0.06); color: var(--ink); border: 1px solid var(--border); }
+    .score { display: flex; justify-content: space-around; font-size: 0.8rem; color: var(--muted); }
+    .score strong { color: var(--ink); font-size: 1rem; display: block; text-align: center; }
+  </style>
+</head>
+<body>
+  <main class="panel">
+    <div class="top">
+      <h1 id="xox-title">XOX Live</h1>
+      <span id="mode-pill" class="mode-pill">vs BOT AI</span>
+    </div>
+
+    <div class="score">
+      <div>❌ P1 / Anda <strong id="sc-x">0</strong></div>
+      <div>Seri <strong id="sc-d">0</strong></div>
+      <div>⭕ P2 / Bot <strong id="sc-o">0</strong></div>
+    </div>
+
+    <div id="status" class="status">Giliran ❌ (Anda)</div>
+
+    <div id="board" class="board"></div>
+
+    <div class="actions">
+      <button id="btn-action" class="btn btn-primary" type="button">Main Lagi</button>
+    </div>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const token = (params.get('token') || '').replace(/\D/g, '');
+    const botBrand = (params.get('bot') || '').trim();
+    if (botBrand) {
+      document.getElementById('xox-title').textContent = `XOX — ${botBrand}`;
+      document.title = `XOX Live — ${botBrand}`;
+    }
+
+    const isPvp = params.get('mode') === 'pvp' && token.length === 6;
+
+    const boardEl = document.getElementById('board');
+    const statusEl = document.getElementById('status');
+    const modePill = document.getElementById('mode-pill');
+    const btnAction = document.getElementById('btn-action');
+    const scX = document.getElementById('sc-x');
+    const scO = document.getElementById('sc-o');
+    const scD = document.getElementById('sc-d');
+
+    const WIN_LINES = [
+      [0,1,2],[3,4,5],[6,7,8],
+      [0,3,6],[1,4,7],[2,5,8],
+      [0,4,8],[2,4,6]
+    ];
+
+    let board = Array(9).fill(null);
+    let turn = 'X';
+    let finished = false;
+    let expired = false;
+    let winLine = [];
+    let scores = { X: 0, O: 0, D: 0 };
+    let mySymbol = 'X';
+    let sse = null;
+
+    let clientId = sessionStorage.getItem('xox_cid') || Math.random().toString(36).slice(2, 12);
+    sessionStorage.setItem('xox_cid', clientId);
+
+    function checkWin(b) {
+      for (const line of WIN_LINES) {
+        const [a, c, d] = line;
+        if (b[a] && b[a] === b[c] && b[a] === b[d]) return { winner: b[a], line };
+      }
+      if (b.every(Boolean)) return { winner: 'DRAW', line: [] };
+      return null;
+    }
+
+    function botPick(b) {
+      const empty = b.map((v, i) => v ? -1 : i).filter((i) => i !== -1);
+      for (const i of empty) { b[i] = 'O'; const w = checkWin(b)?.winner === 'O'; b[i] = null; if (w) return i; }
+      for (const i of empty) { b[i] = 'X'; const w = checkWin(b)?.winner === 'X'; b[i] = null; if (w) return i; }
+      if (!b[4]) return 4;
+      const corners = [0,2,6,8].filter((i) => !b[i]);
+      if (corners.length) return corners[Math.floor(Math.random() * corners.length)];
+      return empty[Math.floor(Math.random() * empty.length)];
+    }
+
+    function render() {
+      modePill.textContent = isPvp ? `#${token} (${mySymbol})` : 'vs BOT AI';
+      scX.textContent = scores.X;
+      scO.textContent = scores.O;
+      scD.textContent = scores.D;
+
+      boardEl.innerHTML = board.map((v, i) => `
+        <button type="button" class="cell ${winLine.includes(i) ? 'win' : ''}" data-i="${i}" data-v="${v || ''}" ${finished || expired || v ? 'disabled' : ''}>
+          ${v || ''}
+        </button>
+      `).join('');
+    }
+
+    function applyRoomState(room, sym) {
+      if (sym) mySymbol = sym;
+      if (room.expired || room.tokenReleased) {
+        expired = true;
+        finished = true;
+        statusEl.className = 'status warn';
+        statusEl.textContent = '🔒 Token selesai dipakai & dikembalikan ke pool. Ketik .xox lagi di grup untuk token baru!';
+        btnAction.textContent = 'Selesai';
+        btnAction.disabled = true;
+        if (sse) { sse.close(); sse = null; }
+        render();
+        return;
+      }
+
+      board = room.board;
+      turn = room.turn;
+      scores = room.scores;
+      const w = checkWin(board);
+      finished = Boolean(w);
+      winLine = w ? w.line : [];
+      statusEl.className = 'status';
+
+      if (w) {
+        statusEl.textContent = w.winner === 'DRAW'
+          ? '🤝 Seri! Token otomatis dilepas dalam 30 detik.'
+          : `🏆 Pemenang: ${w.winner}! Token otomatis dilepas dalam 30 detik.`;
+        btnAction.textContent = 'Selesai & Lepas Token';
+      } else if (!room.playerO) {
+        statusEl.textContent = `⏳ Token #${token} aktif — Menunggu lawan mengetuk link yang sama di grup...`;
+        btnAction.textContent = 'Batalkan & Lepas Token';
+      } else if (mySymbol === 'SPEC') {
+        statusEl.textContent = `👀 Mode Penonton — Giliran ${turn}`;
+        btnAction.disabled = true;
+      } else {
+        statusEl.textContent = turn === mySymbol ? `⚡ Giliran Anda (${mySymbol})` : `⏳ Menunggu giliran ${turn}...`;
+        btnAction.textContent = 'Akhiri & Lepas Token';
+      }
+      render();
+    }
+
+    function connectSse() {
+      if (sse) { sse.close(); sse = null; }
+      sse = new EventSource(`/api/xox/stream?token=${encodeURIComponent(token)}`);
+      sse.onmessage = (ev) => {
+        try {
+          const room = JSON.parse(ev.data);
+          applyRoomState(room);
+        } catch {}
+      };
+    }
+
+    async function sendPvp(action, idx) {
+      try {
+        const res = await fetch('/api/xox/room', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token, clientId, action, idx }),
+        });
+        const data = await res.json();
+        if (!data.ok) {
+          applyRoomState({ expired: true });
+          return;
+        }
+        applyRoomState(data.room, data.symbol);
+      } catch {}
+    }
+
+    boardEl.addEventListener('click', (e) => {
+      const cell = e.target.closest('[data-i]');
+      if (!cell || finished || expired) return;
+      const i = Number(cell.dataset.i);
+      if (board[i]) return;
+
+      if (isPvp) {
+        if (turn !== mySymbol) return;
+        sendPvp('move', i);
+        return;
+      }
+
+      // Mode Chat Pribadi: 1v1 vs Bot AI
+      board[i] = 'X';
+      let res = checkWin(board);
+      if (res) {
+        finished = true;
+        winLine = res.line;
+        if (res.winner === 'DRAW') { scores.D++; statusEl.textContent = '🤝 Seri!'; }
+        else { scores.X++; statusEl.textContent = '🏆 Anda Menang!'; }
+        render();
+        return;
+      }
+
+      const bm = botPick(board);
+      if (bm !== undefined) board[bm] = 'O';
+      res = checkWin(board);
+      if (res) {
+        finished = true;
+        winLine = res.line;
+        if (res.winner === 'DRAW') { scores.D++; statusEl.textContent = '🤝 Seri!'; }
+        else { scores.O++; statusEl.textContent = '🤖 Bot Menang!'; }
+      } else {
+        statusEl.textContent = 'Giliran ❌ (Anda)';
+      }
+      render();
+    });
+
+    btnAction.addEventListener('click', () => {
+      if (isPvp) {
+        sendPvp('close');
+        return;
+      }
+      board = Array(9).fill(null);
+      turn = 'X';
+      finished = false;
+      winLine = [];
+      statusEl.textContent = 'Giliran ❌ (Anda)';
+      render();
+    });
+
+    render();
+    if (isPvp) {
+      sendPvp('join');
+      connectSse();
+    }
+  </script>
+</body>
+</html>

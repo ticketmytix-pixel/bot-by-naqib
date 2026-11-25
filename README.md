@@ -1,60 +1,54 @@
-# WhatsApp Audio Sticker Bot (Sound Sticker + Pairing Code)
+# Bot by Naqib — Multi-Bot WhatsApp Platform (24/7)
 
-Bot WhatsApp siap pakai (**tinggal pairing**) yang mendukung fitur **Sound Sticker / Sticker Audio** sesuai update terbaru WhatsApp (protobuf `StickerMessage.audioMessage` field `26`).
+Platform Multi-Bot WhatsApp futuristik yang memungkinkan **banyak nomor WhatsApp menjadi bot secara bersamaan**, dilengkapi:
+- **Login Resmi Google OAuth2** (Akun pertama / `OWNER_EMAIL` otomatis menjadi **OWNER**)
+- **Verifikasi OTP 6 Digit ke WhatsApp** di backend (`phoneVerified: true`)
+- **Sistem Role (`OWNER`, `BUYER` VIP, `USER`)** — upgrade VIP via WhatsApp **`085185779714`**
+- **Peringatan Resmi Aturan WhatsApp (ToS)** sebelum pairing
+- **Ringan & Anti-Lag** (Gzip RAM Cache, IP Rate Limiter, Debounced DB Writes, Visibility-Aware Polling)
+- **Fitur Bot Lengkap:**
+  - `.s --audio` / `.sa` — **Sound Sticker** (video maks 5 detik / gambar+VN maks 10 detik)
+  - `.s` — Sticker biasa gambar/video (tambah `--crop` untuk 1:1)
+  - `.dl <link>` / `.tiktok <link>` — Download video sosmed **tanpa watermark**
+  - `.spotify <judul/link>` / `.play <judul>` — Dengar & unduh musik MP3
+  - `.toaudio` / `.tomp3` — Ekstrak audio MP3 dari video
+  - `.removebg` / `.nobg` — Hapus background foto jadi PNG transparan
+  - `.antidelete on/off`, `.antiedit on/off`, `.antikudeta on/off` — Proteksi Grup
+  - `.xox` — Minigame Tic-Tac-Toe (XOX)
 
-## Fitur
+---
 
-- **Tinggal Pairing**: Login langsung menggunakan **Pairing Code 8 digit** (tanpa perlu scan QR).
-- **Sound Sticker dari Video (`.s --audio` / `.sa`)**:
-  - Kirim video dengan caption `.s --audio` atau reply video dengan `.s --audio`.
-  - Otomatis mengubah video menjadi stiker animasi WebP 512×512 (maks 5 detik, dikompresi otomatis `<= 500 KB`) + mengekstrak audio ke OGG Opus dan menggabungkannya sebagai Sound Sticker.
-- **Sound Sticker dari Gambar + Audio/VN**:
-  - Reply pesan audio/VN lalu kirim gambar dengan caption `.s --audio` (atau sebaliknya: reply gambar/stiker lalu kirim audio/VN).
-  - Mendukung durasi audio hingga **10 detik** untuk stiker statis.
-- **Sticker Biasa (`.s`)**:
-  - Mendukung gambar maupun video/GIF.
-  - Mendukung opsi `--crop` / `-c` untuk crop 1:1 penuh.
-- **Auto-Patch WAProto**: Otomatis menambahkan dukungan field `26` (`audioMessage`) pada `StickerMessage` Baileys saat runtime.
+## Tutorial Aktifkan 24 Jam Nonstop (Lewat HP)
 
-## Prasyarat
+### Langkah 1 — Upload ke GitHub
+1. Ekstrak file `bot-by-naqib.zip` di HP Anda.
+2. Buka https://github.com/new → buat repo baru (misal: `bot-by-naqib`) → klik **Create repository**.
+3. Pilih **uploading an existing file** → upload seluruh isi folder hasil ekstrak (`Dockerfile`, `package.json`, `package-lock.json`, `src/`, `public/`, dll.) → klik **Commit changes**.
 
-- **Node.js** v18+ (disarankan v20 / v22)
-- **FFmpeg** (termasuk `ffprobe`)
+### Langkah 2 — Deploy 24/7 di Railway (atau Koyeb)
+1. Buka https://railway.app → Login pakai **GitHub**.
+2. Klik **New Project → Deploy from GitHub repo → pilih `bot-by-naqib`**.
+3. Railway otomatis memakai `Dockerfile` (Node.js 22 + FFmpeg + yt-dlp + Python Pillow langsung terpasang).
+4. Buka tab **Settings → Networking → Generate Domain** (catat domain Anda, contoh: `https://bot-naqib.up.railway.app`).
+5. Buka tab **Volumes → Add Volume** agar sesi & data user tidak hilang saat restart:
+   - Mount Path 1: `/app/sessions`
+   - Mount Path 2: `/app/data`
 
-Install FFmpeg:
-- **Ubuntu/Debian**: `sudo apt update && sudo apt install -y ffmpeg`
-- **Termux (Android)**: `pkg install nodejs-lts ffmpeg`
-- **Windows**: `winget install Gyan.FFmpeg`
-
-## Cara Menjalankan
-
-1. Masuk ke folder project dan install dependensi:
-   ```bash
-   cd wa-audio-sticker-bot
-   npm install
+### Langkah 3 — Aktifkan Login Google Resmi (OAuth2)
+1. Buka https://console.cloud.google.com/apis/credentials
+2. Klik **Create Credentials → OAuth client ID → Web application**.
+3. Pada **Authorized redirect URIs**, masukkan:
    ```
-
-2. *(Opsional)* Salin `.env.example` ke `.env` untuk mengatur nomor pairing, packname, author, atau prefix:
-   ```bash
-   cp .env.example .env
+   https://DOMAIN-ANDA/auth/google/callback
    ```
+4. Salin **Client ID** dan **Client Secret**, lalu masukkan ke menu **Variables** di Railway/Koyeb:
+   - `GOOGLE_CLIENT_ID` = `<Client ID Anda>`
+   - `GOOGLE_CLIENT_SECRET` = `<Client Secret Anda>`
+   - `PUBLIC_URL` = `https://DOMAIN-ANDA`
+   - `OWNER_EMAIL` = `<email.gmail.anda@gmail.com>`
 
-3. Jalankan bot:
-   ```bash
-   npm start
-   ```
-
-4. Masukkan nomor WhatsApp bot (format internasional tanpa `+`, contoh: `6281234567890`) saat diminta di terminal.
-5. Terminal akan menampilkan **Kode Pairing 8 digit** (misalnya `ABCD-1234`).
-6. Di HP Anda, buka **WhatsApp → Perangkat Tertaut → Tautkan Perangkat → Tautkan dengan nomor telepon saja**, lalu masukkan kode tersebut.
-
-## Daftar Command
-
-| Command | Fungsi |
-|---|---|
-| `.s --audio` / `.sa` | Buat **Sound Sticker** dari video (maks 5 detik) atau gambar + reply audio (maks 10 detik) |
-| `.s --audio --crop` | Buat Sound Sticker dengan crop 1:1 penuh |
-| `.s` / `.stiker` | Buat stiker biasa (statis/animasi) |
-| `.menu` / `.help` | Tampilkan panduan penggunaan |
-
-> **Catatan:** Ikon speaker (`🔇`/`🔊`) dan pemutaran suara pada Sound Sticker hanya muncul di aplikasi WhatsApp versi terbaru / WhatsApp Beta yang sudah mengaktifkan fitur Sound Stickers. Pada versi WhatsApp lama, stiker tetap tampil sebagai stiker normal.
+### Langkah 4 — Pairing Bot Pertama & Verifikasi OTP
+1. Buka `https://DOMAIN-ANDA` di browser HP Anda.
+2. Klik **Lanjutkan dengan Google** dengan akun Gmail `OWNER_EMAIL` Anda → Anda otomatis masuk sebagai **OWNER**.
+3. Centang persetujuan aturan WhatsApp → masukkan nomor WA bot pertama → klik **Generate Kode Pairing 8 Digit** → masukkan di **WhatsApp → Perangkat Tertaut → Tautkan dengan nomor telepon saja**.
+4. Setelah bot pertama **TERHUBUNG**, fitur **Verifikasi OTP WhatsApp** aktif untuk semua user & bot Anda jalan **24 jam nonstop**!
